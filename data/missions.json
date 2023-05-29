@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "title": "Bring your own bag",
+        "description": "Bring your own bag when you go to the store",
+        "extra":"Did you know that....",
+        "points": 2
+    },
+    {
+        "id": 2,
+        "title": "Local food",
+        "description": "Eat something locally produced",
+        "extra":"Here is a nice recipe",
+        "points": 3
+    }
+]
