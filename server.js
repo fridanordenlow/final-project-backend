@@ -180,6 +180,58 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
+// GET single user
+app.get("/users/:userId", authenticateUser)
+app.get("/users/:userId", async (req, res) => {
+  const { userId } = req.params
+  try {
+    const user = await User.findById(userId)
+    res.status(200).json({
+      success: true,
+      response: user,
+      message: "User found"
+    })
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      message: "User could not be found"
+    })
+  }
+})
+
+// PATCH single user's score
+app.patch("/users/:userId/score", authenticateUser)
+app.patch("/users/:userId/score", async (req, res) => {
+  const { userId } = req.params
+  const { points } = req.body; // Assuming the points are sent in the request body, make sure the points data is being sent properly in the request payload.
+
+  try {
+    const user = await User.findById(userId)
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      })
+    }
+
+    user.score += points
+    await user.save()
+
+    res.status(200).json({
+      success: true,
+      response: user,
+      message: "User score updated successfully"
+    })
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      message: "Error, could not update user score"
+    })
+  }
+})
+
 app.get("/missions", authenticateUser)
 // If they "pass" this is the function that happens next()
 app.get("/missions", async (req, res) => {
@@ -213,7 +265,7 @@ app.post("/missions", async (req, res) => {
   const { title, description, extraInfo, points } = req.body
   const accessToken = req.header("Authorization")
   try {
-    const user = await User.findOne({accessToken: accessToken})
+    // const user = await User.findOne({accessToken: accessToken})
     const newMission = await new Mission({title, description, extraInfo, points }).save()
     res.status(201).json({
       success: true,
@@ -230,7 +282,7 @@ app.post("/missions", async (req, res) => {
 });
 
 app.patch("/missions/:missionId/points", authenticateUser)
-app.patch("missions/:missionId/points", async (req, res) => {
+app.patch("/missions/:missionId/points", async (req, res) => {
   const { missionId } = req.params;
   const accessToken = req.header("Authorization")
   try {
