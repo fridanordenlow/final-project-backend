@@ -236,9 +236,11 @@ app.get("/users/:userId", async (req, res) => {
 app.patch("/users/:userId/collect-points/:missionId", authenticateUser);
 app.patch("/users/:userId/collect-points/:missionId", async (req, res) => {
   const { userId, missionId } = req.params;
+  const accessToken = req.header("Authorization")
   
   try {
-    const user = await User.findById(userId);
+    const user = await User.findOne({_id: userId, accessToken})
+    // const user = await User.findById(userId);
     const mission = await Mission.findById(missionId);
   
     if (!user) {
