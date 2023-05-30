@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
+import crypto from "crypto";
+import bcrypt from "bcrypt";
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -26,8 +28,6 @@ app.get("/", (req, res) => {
 const { Schema } = mongoose
 
 const UserSchema = new Schema({
-  // Add email, first name, surname?
-  // Add missions connected to user?
   firstName: {
     type: String,
     required: true
@@ -44,9 +44,7 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
-    minlength: 8,
-    maxlength: 30
+    required: true
   },
   score: {
     type: Number,
@@ -95,6 +93,10 @@ const Mission = mongoose.model("Mission", MissionSchema)
 // Register new users (post user to database)
 app.post("/register", async (req, res) => {
   const { firstName, lastName, email, password } = req.body
+  console.log(req.body)
+  if (password.length < 8 || password.length > 30) {
+    res.status(400).json({success: false, message: "Password needs to be minimum 8 characters and maximum 30 characters"}) 
+  }
   try {
     const salt = bcrypt.genSaltSync() // Obscuring our password
     const newUser = await new User ({
@@ -117,7 +119,7 @@ app.post("/register", async (req, res) => {
   } catch (err) {
     res.status(400).json({
       success: false,
-      message: "User already exists",
+      message: "Registration failed",
       response: err
     })
   }
