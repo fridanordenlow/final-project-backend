@@ -42,21 +42,21 @@ const UserSchema = new Schema({
     required: true,
     unique: true
   },
-  // username: {
-  //   type: String, 
-  //   required: true,
-  //   unique: true
-  // },
   password: {
     type: String,
     required: true,
     minlength: 8,
     maxlength: 30
   },
+  score: {
+    type: Number,
+    default: null
+  },
   accessToken: {
     type: String,
     default: () => crypto.randomBytes(128).toString("hex")
   }
+  // Possibly connecting missions to the user later
   // missions: {}
 });
 
@@ -94,18 +94,22 @@ const Mission = mongoose.model("Mission", MissionSchema)
 
 // Register new users (post user to database)
 app.post("/register", async (req, res) => {
-  const { username, password } = req.body
+  const { firstName, lastName, email, password } = req.body
   try {
     const salt = bcrypt.genSaltSync() // Obscuring our password
     const newUser = await new User ({
-      username: username,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
       password: bcrypt.hashSync(password, salt)
     }).save()
     res.status(201).json({
       success: true,
       message: "Registration successful",
       response: {
-        username: newUser.username,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
         id: newUser._id,
         accessToken: newUser.accessToken
       }
@@ -121,16 +125,16 @@ app.post("/register", async (req, res) => {
 
 // Log in 
 app.post("/login", async (req, res) => {
-  const { username, password } = req.body
+  const { email, password } = req.body
   try {
-    const user = await User.findOne({username: username})
+    const user = await User.findOne({email: email})
     // Comparing the password with the password filled in
     if (user && bcrypt.compareSync(password, user.password)) {
       res.status(200).json({
         success: true,
-        message: "Log in successful",
+        message: "Login successful",
         response: {
-          username: user.username,
+          email: user.email,
           id: user._id,
           accessToken: user.accessToken
         } 
