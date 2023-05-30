@@ -208,11 +208,12 @@ app.get("/missions", async (req, res) => {
 });
 
 // app.post("/missions", authenticateUser) do we need authentication here now?
+app.post("/missions", authenticateUser)
 app.post("/missions", async (req, res) => {
   const { title, description, extraInfo, points } = req.body
-  // const accessToken = req.header("Authorization")
+  const accessToken = req.header("Authorization")
   try {
-    // const user = await User.findOne({accessToken: accessToken})
+    const user = await User.findOne({accessToken: accessToken})
     const newMission = await new Mission({title, description, extraInfo, points }).save()
     res.status(201).json({
       success: true,
@@ -225,6 +226,39 @@ app.post("/missions", async (req, res) => {
       response: err,
       message: "Error, new mission could not be created"
     })
+  }
+});
+
+app.patch("/missions/:missionId/points", authenticateUser)
+app.patch("missions/:missionId/points", async (req, res) => {
+  const { missionId } = req.params;
+  const accessToken = req.header("Authorization")
+  try {
+    const user = await User.findOne({accessToken: accessToken})
+    const mission = await Mission.findById(missionId);
+  
+    if (mission) {
+      user.score += mission.points;
+      await user.save();
+
+      const updatedMission = await mission.save();
+      res.status(200).json({
+        success: true,
+        response: updatedMission,
+        message: `${updatedMission.id} points collected`,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "Mission not found",
+      });
+    }
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      message: "An error occurred",
+    });
   }
 });
 
