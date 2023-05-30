@@ -274,6 +274,26 @@ app.patch("/users/:userId/collect-points/:missionId", async (req, res) => {
   }
 });
 
+// GET user score
+app.get("/users/:userId/user-score", authenticateUser)
+app.get("/users/:userId/user-score", async (req, res) => {
+  const { userId } = req.params
+  try {
+    const user = await User.findById(userId)
+    res.status(200).json({
+      success: true,
+      response: user.score,
+      message: `Your score is ${user.score}`
+    })
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      message: "User could not be found"
+    })
+  }
+})
+
 // GET missions
 app.get("/missions", authenticateUser)
 // If they "pass" this is the function that happens next()
@@ -323,39 +343,6 @@ app.post("/missions", async (req, res) => {
     })
   }
 });
-
-// app.patch("/missions/:missionId/points", authenticateUser)
-// app.patch("/missions/:missionId/points", async (req, res) => {
-//   const { missionId } = req.params;
-//   const accessToken = req.header("Authorization")
-//   try {
-//     const user = await User.findOne({accessToken: accessToken})
-//     const mission = await Mission.findById(missionId);
-  
-//     if (mission) {
-//       user.score += mission.points;
-//       await user.save();
-
-//       const updatedMission = await mission.save();
-//       res.status(200).json({
-//         success: true,
-//         response: updatedMission,
-//         message: `${updatedMission.id} points collected`,
-//       });
-//     } else {
-//       res.status(404).json({
-//         success: false,
-//         message: "Mission not found",
-//       });
-//     }
-//   } catch (err) {
-//     res.status(400).json({
-//       success: false,
-//       response: err,
-//       message: "An error occurred",
-//     });
-//   }
-// });
 
 
 // Start the server
