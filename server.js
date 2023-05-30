@@ -200,38 +200,79 @@ app.get("/users/:userId", async (req, res) => {
   }
 })
 
-// PATCH single user's score
-app.patch("/users/:userId/score", authenticateUser)
-app.patch("/users/:userId/score", async (req, res) => {
-  const { userId } = req.params
-  const { points } = req.body; // Assuming the points are sent in the request body, make sure the points data is being sent properly in the request payload.
+// // PATCH single user's score
+// app.patch("/users/:userId/score", authenticateUser)
+// app.patch("/users/:userId/score", async (req, res) => {
+//   const { userId } = req.params
+//   const { points } = req.body; // Assuming the points are sent in the request body, make sure the points data is being sent properly in the request payload.
 
+//   try {
+//     const user = await User.findById(userId)
+//     if (!user) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found"
+//       })
+//     }
+
+//     user.score += points
+//     await user.save()
+
+//     res.status(200).json({
+//       success: true,
+//       response: user,
+//       message: "User score updated successfully"
+//     })
+//   } catch (err) {
+//     res.status(400).json({
+//       success: false,
+//       response: err,
+//       message: "Error, could not update user score"
+//     })
+//   }
+// })
+
+// PATCH single user's score from specific mission
+app.patch("/users/:userId/collect-points/:missionId", authenticateUser);
+app.patch("/users/:userId/collect-points/:missionId", async (req, res) => {
+  const { userId, missionId } = req.params;
+  
   try {
-    const user = await User.findById(userId)
+    const user = await User.findById(userId);
+    const mission = await Mission.findById(missionId);
+  
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: "User not found"
-      })
+        message: "User not found",
+      });
     }
-
-    user.score += points
-    await user.save()
+    
+    if (!mission) {
+      return res.status(404).json({
+        success: false,
+        message: "Mission not found",
+      });
+    }
+    
+    user.score += mission.points;
+    await user.save();
 
     res.status(200).json({
       success: true,
       response: user,
-      message: "User score updated successfully"
-    })
+      message: `Good job! ${mission.points} points collected`,
+    });
   } catch (err) {
     res.status(400).json({
       success: false,
       response: err,
-      message: "Error, could not update user score"
-    })
+      message: "An error occurred",
+    });
   }
-})
+});
 
+// GET missions
 app.get("/missions", authenticateUser)
 // If they "pass" this is the function that happens next()
 app.get("/missions", async (req, res) => {
@@ -259,13 +300,13 @@ app.get("/missions", async (req, res) => {
   }
 });
 
-// app.post("/missions", authenticateUser) do we need authentication here now?
+// app.post("/missions", authenticateUser) do we need authentication here now? Before we have added the feature of users adding missions?
 app.post("/missions", authenticateUser)
 app.post("/missions", async (req, res) => {
   const { title, description, extraInfo, points } = req.body
-  const accessToken = req.header("Authorization")
+  // const accessToken = req.header("Authorization")
   try {
-    // const user = await User.findOne({accessToken: accessToken})
+    //const user = await User.findOne({accessToken: accessToken})
     const newMission = await new Mission({title, description, extraInfo, points }).save()
     res.status(201).json({
       success: true,
@@ -281,38 +322,38 @@ app.post("/missions", async (req, res) => {
   }
 });
 
-app.patch("/missions/:missionId/points", authenticateUser)
-app.patch("/missions/:missionId/points", async (req, res) => {
-  const { missionId } = req.params;
-  const accessToken = req.header("Authorization")
-  try {
-    const user = await User.findOne({accessToken: accessToken})
-    const mission = await Mission.findById(missionId);
+// app.patch("/missions/:missionId/points", authenticateUser)
+// app.patch("/missions/:missionId/points", async (req, res) => {
+//   const { missionId } = req.params;
+//   const accessToken = req.header("Authorization")
+//   try {
+//     const user = await User.findOne({accessToken: accessToken})
+//     const mission = await Mission.findById(missionId);
   
-    if (mission) {
-      user.score += mission.points;
-      await user.save();
+//     if (mission) {
+//       user.score += mission.points;
+//       await user.save();
 
-      const updatedMission = await mission.save();
-      res.status(200).json({
-        success: true,
-        response: updatedMission,
-        message: `${updatedMission.id} points collected`,
-      });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: "Mission not found",
-      });
-    }
-  } catch (err) {
-    res.status(400).json({
-      success: false,
-      response: err,
-      message: "An error occurred",
-    });
-  }
-});
+//       const updatedMission = await mission.save();
+//       res.status(200).json({
+//         success: true,
+//         response: updatedMission,
+//         message: `${updatedMission.id} points collected`,
+//       });
+//     } else {
+//       res.status(404).json({
+//         success: false,
+//         message: "Mission not found",
+//       });
+//     }
+//   } catch (err) {
+//     res.status(400).json({
+//       success: false,
+//       response: err,
+//       message: "An error occurred",
+//     });
+//   }
+// });
 
 
 // Start the server
