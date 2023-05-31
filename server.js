@@ -237,6 +237,23 @@ app.post("/users/:userId/reset-score", async (req, res) => {
   }
 });
 
+// Test 
+// app.get("/missions", async (req, res) => {
+//   try {
+//       const missions = await Mission.find()
+//       res.status(200).json({
+//         success: true,
+//         response: missions,
+//         message: "Missions found"
+//       })
+//     } catch (err) {
+//     res.status(500).json({
+//       success: false,
+//       response: err
+//     })
+//   }
+// });
+
 // GET missions
 app.get("/missions", authenticateUser)
 // If they "pass" this is the function that happens next()
