@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
-// import crypto from "crypto";
 import bcrypt from "bcrypt";
 import UserSchema from "./models/UserSchema";
 import MissionSchema from "./models/MissionSchema";
@@ -22,14 +21,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Our imported data models
+const User = mongoose.model("User", UserSchema)
+const Mission = mongoose.model("Mission", MissionSchema)
+
 // Start defining your routes here
 app.get("/", (req, res) => {
   res.send(listEndpoints(app));
 });
-
-const User = mongoose.model("User", UserSchema)
-
-const Mission = mongoose.model("Mission", MissionSchema)
 
 // Register new users (post user to database)
 app.post("/register", async (req, res) => {
@@ -39,7 +38,7 @@ app.post("/register", async (req, res) => {
     res.status(400).json({success: false, message: "Password needs to be minimum 8 characters and maximum 30 characters"}) 
   }
   try {
-    const salt = bcrypt.genSaltSync() // Obscuring our password
+    const salt = bcrypt.genSaltSync()
     const newUser = await new User ({
       firstName: firstName,
       lastName: lastName,
@@ -71,7 +70,6 @@ app.post("/login", async (req, res) => {
   const { email, password } = req.body
   try {
     const user = await User.findOne({email: email})
-    // Comparing the password with the password filled in
     if (user && bcrypt.compareSync(password, user.password)) {
       res.status(200).json({
         success: true,
@@ -282,7 +280,7 @@ app.get("/missions", async (req, res) => {
   }
 });
 
-// app.post("/missions", authenticateUser) do we need authentication here now? Before we have added the feature of users adding missions?
+// POST missions 
 app.post("/missions", authenticateUser)
 app.post("/missions", async (req, res) => {
   const { title, description, extraInfo, points } = req.body
