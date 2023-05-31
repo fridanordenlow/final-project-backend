@@ -2,8 +2,11 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import listEndpoints from "express-list-endpoints";
-import crypto from "crypto";
+// import crypto from "crypto";
 import bcrypt from "bcrypt";
+import UserSchema from "./models/UserSchema";
+import MissionSchema from "./models/MissionSchema";
+import authenticateUser from "./controllers/authenticateUser";
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -19,76 +22,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Test
-
 // Start defining your routes here
 app.get("/", (req, res) => {
   res.send(listEndpoints(app));
 });
 
-// User schema
-const { Schema } = mongoose
-
-const UserSchema = new Schema({
-  firstName: {
-    type: String,
-    required: true
-  },
-  lastName: {
-    type: String,
-    required: true
-  },
-  // Hur definierar man att bara "mailadress-form" accepteras?
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  score: {
-    type: Number,
-    default: null
-  },
-  accessToken: {
-    type: String,
-    default: () => crypto.randomBytes(128).toString("hex")
-  }
-  // Possibly connecting missions to the user later
-  // missions: {}
-});
-
 const User = mongoose.model("User", UserSchema)
-
-// Mission schema
-const MissionSchema = new Schema({
-  title: {
-    type: String,
-    required: true
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  extraInfo: {
-    type: String
-  },
-  points: {
-    type: Number,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: new Date()
-  }
-  // Not necessary yet? Stretch goal for users to post their own missions
-  // user: {
-  //   type: String,
-  //   required: true
-  // }
-});
 
 const Mission = mongoose.model("Mission", MissionSchema)
 
@@ -156,29 +95,6 @@ app.post("/login", async (req, res) => {
     })
   }
 });
-
-// Authenticate the user
-const authenticateUser = async (req, res, next) => {
-  const accessToken = req.header("Authorization")
-  // If we find the user's correct accessToken in the header "Authorization"
-  try {
-    const user = await User.findOne({accessToken: accessToken})
-    if (user) {
-      // Calling the next function says that all of the stuff that we get from the req/res, will be transferred to the next function with the same endpoint
-      next()
-    } else {
-    res.status(401).json({
-      success: false,
-      response: "Please log in"
-    });
-    }
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      response: err
-    })
-  }
-};
 
 // GET single user
 app.get("/users/:userId", authenticateUser)
@@ -370,6 +286,26 @@ app.post("/missions", async (req, res) => {
     })
   }
 });
+
+// GET single mission
+app.get("/missions/:missionId", authenticateUser)
+app.get("/missions/:missionId", async (req, res) => {
+  const { missionId } = req.params
+  try {
+    const mission = await Mission.findById(missionId)
+    res.status(200).json({
+      success: true,
+      response: mission,
+      message: "Mission found"
+    })
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      message: "Mission could not be found"
+    })
+  }
+})
 
 
 // Start the server

@@ -1,1 +1,0 @@
-// Här skulle vi kunna lägga in funktionen och sedan exportera den
