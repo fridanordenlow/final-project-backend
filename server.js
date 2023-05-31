@@ -278,8 +278,9 @@ app.patch("/users/:userId/collect-points/:missionId", async (req, res) => {
 app.get("/users/:userId/user-score", authenticateUser)
 app.get("/users/:userId/user-score", async (req, res) => {
   const { userId } = req.params
+  const accessToken = req.header("Authorization")
   try {
-    const user = await User.findById(userId)
+    const user = await User.findById({_id:userId, accessToken})
     res.status(200).json({
       success: true,
       response: user.score,
@@ -293,6 +294,32 @@ app.get("/users/:userId/user-score", async (req, res) => {
     })
   }
 })
+
+// Reset user score
+app.post("/users/:userId/reset-score", authenticateUser);
+app.post("/users/:userId/reset-score", async (req, res) => {
+  const { userId } = req.params;
+  const accessToken = req.header("Authorization")
+  try {     
+    const user = await User.findById({_id:userId, accessToken})
+    // Perform any necessary checks or validations before resetting the score
+    // For example, you may want to check if the user is authorized to reset the score
+
+    // Reset the user's score to zero
+    await User.updateOne({ _id: userId }, { score: 0 });
+
+    res.status(200).json({
+      success: true,
+      message: "User score has been reset to zero"
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      message: "Failed to reset user score"
+    });
+  }
+});
 
 // GET missions
 app.get("/missions", authenticateUser)
