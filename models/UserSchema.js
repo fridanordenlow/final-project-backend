@@ -30,7 +30,7 @@ const UserSchema = new Schema({
     default: null
   },
   historicRecord: {
-    type: [HistoricRecordSchema]
+    type: [HistoricRecordSchema] // Borde vara [HistoricRecord] emn då crashar Emilias app...?!
   },
   accessToken: {
     type: String,

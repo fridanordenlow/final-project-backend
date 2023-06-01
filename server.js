@@ -217,10 +217,11 @@ app.get("/users/:userId/:date/score", async (req, res) => {
   const accessToken = req.header("Authorization")
   try {
     const user = await User.findById({_id:userId, accessToken, createdAt:date})
+    console.log(user.historicRecord)
     res.status(200).json({
       success: true,
-      response: user.score,
-      message: `Your score is ${HistoricRecord}`
+      response: user.historicRecord.historicScore,
+      message: `Your score is ${user.historicRecord.historicScore}`
     })
   } catch (err) {
     res.status(400).json({

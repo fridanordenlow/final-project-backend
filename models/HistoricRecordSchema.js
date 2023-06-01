@@ -8,7 +8,7 @@ const HistoricRecord = new Schema({
         default: new Date(),
         required: true
       },
-    score: {
+    historicScore: {
         type: Number,
         required: true
     }
