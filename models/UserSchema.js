@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
+import HistoricRecordSchema from "./HistoricRecordSchema";
 
 const { Schema } = mongoose
+
+const HistoricRecord = mongoose.model("HistoricRecord", HistoricRecordSchema)
 
 const UserSchema = new Schema({
   firstName: {
@@ -25,6 +28,9 @@ const UserSchema = new Schema({
   score: {
     type: Number,
     default: null
+  },
+  historicRecord: {
+    type: [HistoricRecordSchema]
   },
   accessToken: {
     type: String,

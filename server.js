@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import UserSchema from "./models/UserSchema";
 import MissionSchema from "./models/MissionSchema";
 import authenticateUser from "./controllers/authenticateUser";
+import HistoricRecord from "./models/HistoricRecordSchema";
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -211,6 +212,27 @@ app.get("/users/:userId/user-score", async (req, res) => {
   }
 })
 
+//GET user score for specific day
+app.get("/users/:userId/:date/score", authenticateUser)
+app.get("/users/:userId/:date/score", async (req, res) => {
+  const { userId, date } = req.params
+  const accessToken = req.header("Authorization")
+  try {
+    const user = await User.findById({_id:userId, accessToken, createdAt:date})
+    res.status(200).json({
+      success: true,
+      response: user.score,
+      message: `Your score is ${HistoricRecord}`
+    })
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      response: err,
+      message: "User could not be found"
+    })
+  }
+})
+
 // Reset user score
 app.post("/users/:userId/reset-score", authenticateUser);
 app.post("/users/:userId/reset-score", async (req, res) => {
@@ -254,9 +276,9 @@ app.post("/users/:userId/reset-score", async (req, res) => {
 //   }
 // });
 
-// GET missions
+// // GET missions
 app.get("/missions", authenticateUser)
-// If they "pass" this is the function that happens next()
+// // If they "pass" this is the function that happens next()
 app.get("/missions", async (req, res) => {
   const accessToken = req.header("Authorization")
   try {
