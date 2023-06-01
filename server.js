@@ -6,7 +6,6 @@ import bcrypt from "bcrypt";
 import UserSchema from "./models/UserSchema";
 import MissionSchema from "./models/MissionSchema";
 import authenticateUser from "./controllers/authenticateUser";
-import HistoricRecord from "./models/HistoricRecordSchema";
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -154,8 +153,8 @@ app.patch("/users/:userId/collect-points/:missionId", async (req, res) => {
   
   try {
     const user = await User.findOne({_id: userId, accessToken})
-    // const user = await User.findById(userId);
     const mission = await Mission.findById(missionId);
+    // const todaysPoints = user.getTodaysPoints();
   
     if (!user) {
       return res.status(404).json({
@@ -171,7 +170,9 @@ app.patch("/users/:userId/collect-points/:missionId", async (req, res) => {
       });
     }
     
-    user.score += mission.points;
+    // addera element + element?
+    user.dailyScore.points += mission.points;
+
     await user.save();
 
     res.status(200).json({
@@ -215,21 +216,16 @@ app.get("/users/:userId/:date/score", async (req, res) => {
   const { userId, date } = req.params
   const accessToken = req.header("Authorization")
   try {
-    // const user = await User.findById({_id:userId, accessToken, createdAt:date})
-    // In this case, "historicRecord.createdAt" should be in quotation marks to indicate that it's a nested field. 
-    // The dot notation helps to access the createdAt field within the historicRecord array. "historicRecord.createdAt"
     const user = await User.findOne({ _id: userId, accessToken});
-    // const user = await User.findOne({
-    //   _id: userId,
-    //   accessToken,
-    //   "historicRecord.createdAt": date,
-    // });
-    const record = user.historicRecord.find (record => record.createdAt.toDateString === date)
-    if (record) {
+    // const date = user.dailyScore.date
+    const todaysPoints = user.getTodaysPoints();
+    console.log("Today's points:", todaysPoints);
+  
+    if (user) {
       res.status(200).json({
         success: true,
-        response: record.historicScore,
-        message: `Your score is ${record.historicScore}`
+        response: todaysPoints,
+        message: `Your score is ${todaysPoints}`
       })
     } else {
       res.status(404).json({
