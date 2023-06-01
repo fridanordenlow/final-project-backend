@@ -34,7 +34,6 @@ app.get("/", (req, res) => {
 // Register new users (post user to database)
 app.post("/register", async (req, res) => {
   const { firstName, lastName, email, password } = req.body
-  console.log(req.body)
   if (password.length < 8 || password.length > 30) {
     res.status(400).json({success: false, message: "Password needs to be minimum 8 characters and maximum 30 characters"}) 
   }
@@ -216,18 +215,34 @@ app.get("/users/:userId/:date/score", async (req, res) => {
   const { userId, date } = req.params
   const accessToken = req.header("Authorization")
   try {
-    const user = await User.findById({_id:userId, accessToken, createdAt:date})
-    console.log(user.historicRecord)
-    res.status(200).json({
-      success: true,
-      response: user.historicRecord.historicScore,
-      message: `Your score is ${user.historicRecord.historicScore}`
-    })
+    // const user = await User.findById({_id:userId, accessToken, createdAt:date})
+    // In this case, "historicRecord.createdAt" should be in quotation marks to indicate that it's a nested field. 
+    // The dot notation helps to access the createdAt field within the historicRecord array. "historicRecord.createdAt"
+    const user = await User.findOne({ _id: userId, accessToken});
+    // const user = await User.findOne({
+    //   _id: userId,
+    //   accessToken,
+    //   "historicRecord.createdAt": date,
+    // });
+    const record = user.historicRecord.find (record => record.createdAt.toDateString === date)
+    if (record) {
+      res.status(200).json({
+        success: true,
+        response: record.historicScore,
+        message: `Your score is ${record.historicScore}`
+      })
+    } else {
+      res.status(404).json({
+        success: false,
+        response: null,
+        message: "Score for the specified date not found"
+      });
+    }
   } catch (err) {
     res.status(400).json({
       success: false,
       response: err,
-      message: "User could not be found"
+      message: "Error, something went wrong"
     })
   }
 })
