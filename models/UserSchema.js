@@ -25,16 +25,16 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  accessToken: {
+    type: String,
+    default: () => crypto.randomBytes(128).toString("hex")
+  },
   score: {
     type: Number,
     default: null
   },
   historicRecord: {
     type: [HistoricRecordSchema]
-  },
-  accessToken: {
-    type: String,
-    default: () => crypto.randomBytes(128).toString("hex")
   }
   // Possibly connecting missions to the user later
   // missions: {}

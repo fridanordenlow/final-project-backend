@@ -209,7 +209,7 @@ app.get("/users/:userId/user-score", async (req, res) => {
   }
 })
 
-//GET user score for specific day
+// GET user score for specific day
 app.get("/users/:userId/:date/score", authenticateUser)
 app.get("/users/:userId/:date/score", async (req, res) => {
   const { userId, date } = req.params
