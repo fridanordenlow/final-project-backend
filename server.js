@@ -154,7 +154,6 @@ app.patch("/users/:userId/collect-points/:missionId", async (req, res) => {
   try {
     const user = await User.findOne({_id: userId, accessToken})
     const mission = await Mission.findById(missionId);
-    // const todaysPoints = user.getTodaysPoints();
   
     if (!user) {
       return res.status(404).json({
@@ -170,17 +169,24 @@ app.patch("/users/:userId/collect-points/:missionId", async (req, res) => {
       });
     }
     
-    // addera element + element?
-    user.dailyScore.points += mission.points;
+    const collectedMissionPoints = {
+      title: mission.title,
+      points: mission.points,
+      date: new Date().toLocaleDateString('en-UK')
+    }
+
+    user.dailyScores.push(collectedMissionPoints)
+    console.log(collectedMissionPoints)
 
     await user.save();
 
     res.status(200).json({
       success: true,
-      response: user,
+      response: collectedMissionPoints,
       message: `Good job! ${mission.points} points collected`,
     });
   } catch (err) {
+    console.error(err)
     res.status(400).json({
       success: false,
       response: err,
@@ -189,9 +195,9 @@ app.patch("/users/:userId/collect-points/:missionId", async (req, res) => {
   }
 });
 
-// GET user score
-app.get("/users/:userId/user-score", authenticateUser)
-app.get("/users/:userId/user-score", async (req, res) => {
+// GET a user's total score - måste skrivas om efter ändringar i schemas
+app.get("/users/:userId/total-score", authenticateUser)
+app.get("/users/:userId/total-score", async (req, res) => {
   const { userId } = req.params
   const accessToken = req.header("Authorization")
   try {

@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
-// import HistoricRecordSchema from "./HistoricRecordSchema";
+import ScoreSchema from "./ScoreSchema";
 
 const { Schema } = mongoose
-
-// const HistoricRecord = mongoose.model("HistoricRecord", HistoricRecordSchema)
 
 const UserSchema = new Schema({
   firstName: {
@@ -29,18 +27,22 @@ const UserSchema = new Schema({
     type: String,
     default: () => crypto.randomBytes(128).toString("hex")
   },
-  dailyScore: [
-    {
-      points: {
-        type: Number,
-        default: null
-      },
-      date: {
-        type: Date,
-        default: Date.now
-      }
-    }
-  ]
+  dailyScores: {
+    type: [ScoreSchema],
+    default: []
+  }
+  // dailyScores: [
+  //   {
+  //     points: {
+  //       type: Number,
+  //       default: null
+  //     },
+  //     date: {
+  //       type: Date,
+  //       default: () => new Date()
+  //     }
+  //   }
+  // ]
   // historicRecord: {
   //   type: [HistoricRecordSchema]
   // }
@@ -49,17 +51,17 @@ const UserSchema = new Schema({
 });
 
 
-UserSchema.methods.getTodaysPoints = function() {
-  const today = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
+// UserSchema.methods.getTodaysPoints = function() {
+//   const today = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
 
-  const filteredScores = this.dailyScore.filter(score => {
-    const scoreDate = new Date(score.date).setHours(0, 0, 0, 0); // Get the score's date at midnight
-    return scoreDate === today;
-  });
+//   const filteredScores = this.dailyScore.filter(score => {
+//     const scoreDate = new Date(score.date).setHours(0, 0, 0, 0); // Get the score's date at midnight
+//     return scoreDate === today;
+//   });
 
-  const totalPoints = filteredScores.reduce((sum, score) => sum + score.points, 0);
+//   const totalPoints = filteredScores.reduce((sum, score) => sum + score.points, 0);
 
-  return totalPoints;
-};
+//   return totalPoints;
+// };
 
 export default UserSchema
