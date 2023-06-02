@@ -43,9 +43,6 @@ const UserSchema = new Schema({
   //     }
   //   }
   // ]
-  // historicRecord: {
-  //   type: [HistoricRecordSchema]
-  // }
   // Possibly connecting missions to the user later
   // missions: {}
 });
