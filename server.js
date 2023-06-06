@@ -106,9 +106,9 @@ app.get("/missions", async (req, res) => {
     const user = await User.findOne({ accessToken: accessToken })
 
     if (!user) {
-      return res.status(401).json({
+      return res.status(403).json({
         success: false,
-        message: "Unauthorized"
+        message: "Forbidden"
       })
     }
 
@@ -139,9 +139,9 @@ app.post("/missions", async (req, res) => {
     const user = await User.findOne({accessToken: accessToken})
     
     if (!user) {
-      return res.status(401).json({
+      return res.status(403).json({
         success: false,
-        message: "Unauthorized"
+        message: "Forbidden"
       })
     }
     const newMission = await new Mission({title, description, extraInfo, points }).save()
@@ -170,9 +170,9 @@ app.get("/missions/:missionId", async (req, res) => {
     const user = await User.findOne({accessToken: accessToken})
 
     if (!user) {
-      return res.status(401).json({
+      return res.status(403).json({
         success: false,
-        message: "Unauthorized"
+        message: "Forbidden"
       })
     }
 
@@ -201,9 +201,9 @@ app.get("/users/:userId", async (req, res) => {
   try {
     const user = await User.findById(userId)
     if (!user) {
-      return res.status(401).json({
+      return res.status(403).json({
         success: false,
-        message: "Unauthorized"
+        message: "Forbidden"
       })
     }
     res.status(200).json({
