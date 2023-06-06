@@ -248,7 +248,7 @@ app.patch("/users/:userId/collect-points/:missionId", async (req, res) => {
     const collectedMissionPoints = {
       missionTitle: mission.title,
       points: mission.points,
-      date: new Date().toISOString()
+      date: new Date().toISOString().split('T')[0]
     }
 
     user.dailyScores.push(collectedMissionPoints)
@@ -311,7 +311,8 @@ app.get("/users/:userId/score/:date", async (req, res) => {
   const { userId, date } = req.params
   const accessToken = req.header("Authorization")
   try {
-    const user = await User.findOne({ _id: userId, accessToken});
+    // If we keep the accessToken here we don't get the right response message if the score for a specific date can't be found
+    const user = await User.findOne({ _id: userId });
 
     if (!user) {
       return res.status(404).json({
@@ -320,6 +321,15 @@ app.get("/users/:userId/score/:date", async (req, res) => {
         message: "User not found",
       });
     }
+
+    if (user.accessToken !== accessToken) {
+      return res.status(403).json({
+        success: false,
+        response: null,
+        message: "Forbidden",
+      });
+    }
+    
 
     const filteredScores = user.dailyScores.filter((score) => {
       const scoreDate = new Date(score.createdAt).toISOString().split('T')[0];
@@ -339,7 +349,7 @@ app.get("/users/:userId/score/:date", async (req, res) => {
     } else {
       res.status(404).json({
         success: false,
-        response: null,
+        // response: null,
         message: "Score for the specified date not found"
       });
     }

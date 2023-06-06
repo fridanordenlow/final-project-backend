@@ -13,7 +13,6 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  // Hur definierar man att bara "mailadress-form" accepteras?
   email: {
     type: String,
     required: true,
@@ -31,34 +30,8 @@ const UserSchema = new Schema({
     type: [ScoreSchema],
     default: []
   }
-  // dailyScores: [
-  //   {
-  //     points: {
-  //       type: Number,
-  //       default: null
-  //     },
-  //     date: {
-  //       type: Date,
-  //       default: () => new Date()
-  //     }
-  //   }
-  // ]
   // Possibly connecting missions to the user later
   // missions: {}
 });
-
-
-// UserSchema.methods.getTodaysPoints = function() {
-//   const today = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
-
-//   const filteredScores = this.dailyScore.filter(score => {
-//     const scoreDate = new Date(score.date).setHours(0, 0, 0, 0); // Get the score's date at midnight
-//     return scoreDate === today;
-//   });
-
-//   const totalPoints = filteredScores.reduce((sum, score) => sum + score.points, 0);
-
-//   return totalPoints;
-// };
 
 export default UserSchema

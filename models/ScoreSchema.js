@@ -13,7 +13,7 @@ const ScoreSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: () => new Date().toISOString().split('T')[0], // Store the date in ISO 8601 format
+        default: () => new Date().toISOString().split('T')[0],
         required: true
       }
 })
