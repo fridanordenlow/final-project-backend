@@ -12,7 +12,7 @@ const authenticateUser = async (req, res, next) => {
         // Calling the next function says that all of the stuff that we get from the req/res, will be transferred to the next function with the same endpoint
         next()
       } else {
-      res.status(401).json({
+      res.status(403).json({
         success: false,
         response: "Please log in"
       });
