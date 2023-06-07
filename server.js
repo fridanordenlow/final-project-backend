@@ -221,13 +221,14 @@ app.get("/users/:userId", async (req, res) => {
 })
 
 // PATCH single user's score from specific mission
-app.patch("/users/:userId/collect-points/:missionId", authenticateUser);
-app.patch("/users/:userId/collect-points/:missionId", async (req, res) => {
-  const { userId, missionId } = req.params;
+// Can remove userId and only use accessToken
+app.patch("/missions/collect-points/:missionId", authenticateUser);
+app.patch("/missions/collect-points/:missionId", async (req, res) => {
+  const { missionId } = req.params;
   const accessToken = req.header("Authorization")
   
   try {
-    const user = await User.findOne({_id: userId, accessToken})
+    const user = await User.findOne({accessToken})
   
     if (!user) {
       return res.status(404).json({
