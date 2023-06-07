@@ -192,34 +192,6 @@ app.get("/missions/:missionId", async (req, res) => {
   }
 })
 
-
-// USERS
-// GET single user by id
-app.get("/users/:userId", authenticateUser)
-app.get("/users/:userId", async (req, res) => {
-  const { userId } = req.params
-  try {
-    const user = await User.findById(userId)
-    if (!user) {
-      return res.status(403).json({
-        success: false,
-        message: "Forbidden"
-      })
-    }
-    res.status(200).json({
-      success: true,
-      response: user,
-      message: "User found"
-    })
-  } catch (err) {
-    res.status(404).json({
-      success: false,
-      response: err,
-      message: "User could not be found"
-    })
-  }
-})
-
 // PATCH single user's score from specific mission
 // Can remove userId and only use accessToken
 app.patch("/missions/collect-points/:missionId", authenticateUser);
@@ -271,6 +243,34 @@ app.patch("/missions/collect-points/:missionId", async (req, res) => {
     });
   }
 });
+
+
+// USERS
+// GET single user by id
+app.get("/users/:userId", authenticateUser)
+app.get("/users/:userId", async (req, res) => {
+  const { userId } = req.params
+  try {
+    const user = await User.findById(userId)
+    if (!user) {
+      return res.status(403).json({
+        success: false,
+        message: "Forbidden"
+      })
+    }
+    res.status(200).json({
+      success: true,
+      response: user,
+      message: "User found"
+    })
+  } catch (err) {
+    res.status(404).json({
+      success: false,
+      response: err,
+      message: "User could not be found"
+    })
+  }
+})
 
 // GET a user's total score
 app.get("/users/:userId/total-score", authenticateUser)

@@ -3,14 +3,28 @@
         "id": 1,
         "title": "Bring your own bag",
         "description": "Bring your own bag when you go to the store",
-        "extra":"Did you know that....",
+        "extra":"Did you know that on average, one supermarket goes through 60 million paper bags each year",
         "points": 2
     },
     {
         "id": 2,
-        "title": "Local food",
-        "description": "Eat something locally produced",
-        "extra":"Here is a nice recipe",
+        "title": "Reduce food waste",
+        "description": "Try to minimize food waste by planning meals, storing food properly, and using leftovers creatively", 
+        "extra": "Food waste contributes to greenhouse gas emissions and wastes valuable resources", 
         "points": 3
+    },
+    {
+        "id": 3,
+        "title": "Use reusable water bottle",
+        "description": "Switch to a reusable water bottle instead of using single-use plastic bottles" ,
+        "extra": "Plastic bottles take hundreds of years to decompose and contribute to plastic pollution in oceans and landfills",
+        "points": 2
+    },
+    {
+        "id": 4,
+        "title": "Choose energy-efficient appliances" ,
+        "description": "When purchasing new appliances, opt for energy-efficient models to reduce electricity consumption" ,
+        "extra": "Energy-efficient appliances can significantly lower greenhouse gas emissions" ,
+        "points": 4
     }
 ]
