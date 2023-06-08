@@ -26,5 +26,103 @@
         "description": "When purchasing new appliances, opt for energy-efficient models to reduce electricity consumption" ,
         "extra": "Energy-efficient appliances can significantly lower greenhouse gas emissions" ,
         "points": 4
+    },
+    {
+        "id": 5,
+        "title": "Plant a tree",
+        "description": "Contribute to reforestation efforts by planting a tree in your yard or supporting tree-planting initiatives",
+        "extra": "Trees absorb carbon dioxide and help combat climate change",
+        "points": 3
+    },
+    {
+        "id": 6,
+        "title": "Reduce car usage",
+        "description": "Whenever possible, choose walking, cycling, or public transportation instead of driving a car",
+        "extra": "Cars contribute to air pollution and greenhouse gas emissions",
+        "points": 2
+    },
+    {
+        "id": 7,
+        "title": "Switch to LED lights",
+        "description": "Replace traditional incandescent bulbs with energy-efficient LED lights to save energy",
+        "extra": "LED lights use less electricity and have a longer lifespan",
+        "points": 1
+    },
+    {
+        "id": 8,
+        "title": "Compost organic waste",
+        "description": "Start composting your food scraps and yard waste to reduce landfill waste and create nutrient-rich soil",
+        "extra": "Composting reduces methane emissions from landfills",
+        "points": 2
+    },
+    {
+        "id": 9,
+        "title": "Choose sustainable seafood",
+        "description": "Opt for sustainably sourced seafood to support healthy oceans and prevent overfishing",
+        "extra": "Look for certifications like MSC or ASC when buying seafood",
+        "points": 3
+    },
+    {
+        "id": 10,
+        "title": "Reduce meat consumption",
+        "description": "Try adopting a vegetarian or vegan diet, or simply reduce meat consumption by having more plant-based meals",
+        "extra": "Livestock production contributes to deforestation, greenhouse gas emissions, and water pollution",
+        "points": 4
+    },
+    {
+        "id": 11,
+        "title": "Turn off lights and electronics",
+        "description": "Get into the habit of turning off lights and electronics when not in use to save energy",
+        "extra": "Reducing energy consumption helps lower carbon footprint",
+        "points": 1
+    },
+    {
+        "id": 12,
+        "title": "Support renewable energy",
+        "description": "Consider switching to a renewable energy provider or installing solar panels to power your home",
+        "extra": "Renewable energy sources reduce dependence on fossil fuels and lower emissions",
+        "points": 5
+    },
+    {
+        "id": 13,
+        "title": "Choose eco-friendly cleaning products",
+        "description": "Switch to environmentally friendly cleaning products that are non-toxic and biodegradable",
+        "extra": "Conventional cleaning products often contain harmful chemicals that can harm the environment",
+        "points": 2
+    },
+    {
+        "id": 14,
+        "title": "Support local farmers",
+        "description": "Buy locally produced food to support small-scale farmers and reduce carbon emissions from long-distance transportation",
+        "extra": "Local food travels shorter distances, reducing greenhouse gas emissions associated with transportation",
+        "points": 3
+    },
+    {
+        "id": 15,
+        "title": "Conserve water",
+        "description": "Practice water conservation by taking shorter showers, fixing leaks, and using water-efficient appliances",
+        "extra": "Water scarcity is a global issue, and reducing water consumption helps preserve this valuable resource",
+        "points": 2
+    },
+    {
+        "id": 16,
+        "title": "Support sustainable fashion",
+        "description": "Choose sustainable and ethically produced clothing made from organic or recycled materials",
+        "extra": "Fast fashion contributes to environmental degradation and unethical labor practices",
+        "points": 4
+    },
+    {
+        "id": 17,
+        "title": "Reduce paper usage",
+        "description": "Opt for digital documents and online services to minimize paper consumption",
+        "extra": "Paper production involves deforestation and energy-intensive processes",
+        "points": 1
+    },
+    {
+        "id": 18,
+        "title": "Dispose of e-waste responsibly",
+        "description": "Recycle electronic waste at designated recycling centers to prevent environmental contamination",
+        "extra": "E-waste contains hazardous materials that can pollute soil and water if not disposed of properly",
+        "points": 2
     }
 ]
