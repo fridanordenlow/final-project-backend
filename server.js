@@ -103,7 +103,9 @@ app.get("/missions", async (req, res) => {
   const accessToken = req.header("Authorization")
 
   try {
-    const user = await User.findOne({ accessToken: accessToken })
+    const user = await User.findOne({ accessToken }) 
+   // const user = await User.findOne({ accessToken: accessToken })
+
 
     if (!user) {
       return res.status(403).json({
@@ -136,7 +138,7 @@ app.post("/missions", async (req, res) => {
   const accessToken = req.header("Authorization")
 
   try {
-    const user = await User.findOne({accessToken: accessToken})
+    const user = await User.findOne({ accessToken })
     
     if (!user) {
       return res.status(403).json({
@@ -167,7 +169,7 @@ app.get("/missions/:missionId", async (req, res) => {
   const accessToken = req.header("Authorization")
 
   try {
-    const user = await User.findOne({accessToken: accessToken})
+    const user = await User.findOne({ accessToken })
 
     if (!user) {
       return res.status(403).json({
@@ -200,7 +202,7 @@ app.patch("/missions/collect-points/:missionId", async (req, res) => {
   const accessToken = req.header("Authorization")
   
   try {
-    const user = await User.findOne({accessToken})
+    const user = await User.findOne({ accessToken })
   
     if (!user) {
       return res.status(404).json({
@@ -250,8 +252,13 @@ app.patch("/missions/collect-points/:missionId", async (req, res) => {
 app.get("/users/:userId", authenticateUser)
 app.get("/users/:userId", async (req, res) => {
   const { userId } = req.params
+  const accessToken = req.header("Authorization")
+
   try {
-    const user = await User.findById(userId)
+
+    const user = await User.findOne({_id: userId, accessToken})
+    // const user = await User.findById(userId)
+
     if (!user) {
       return res.status(403).json({
         success: false,
@@ -279,7 +286,9 @@ app.get("/users/:userId/total-score", async (req, res) => {
   const accessToken = req.header("Authorization")
 
   try {
-    const user = await User.findById({_id:userId, accessToken})
+    const user = await User.findOne({_id:userId, accessToken})
+    // const user = await User.findById({ accessToken })
+
 
     if (!user) {
       return res.status(404).json({
