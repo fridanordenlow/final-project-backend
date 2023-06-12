@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import UserSchema from "./models/UserSchema";
 import MissionSchema from "./models/MissionSchema";
 import authenticateUser from "./controllers/authenticateUser";
+import missionsData from "./data/missionsData";
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost/final-project";
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -25,6 +26,18 @@ app.use(express.json());
 const User = mongoose.model("User", UserSchema)
 const Mission = mongoose.model("Mission", MissionSchema)
 
+// RESET_DB is an environmental variable, write "RESET_DB=true npm run dev" in terminal to reset database
+if (process.env.RESET_DB) {
+  const resetDatabase = async () => {
+    await Mission.deleteMany()
+    missionsData.forEach((singleMission) => {
+    const newMission = new Mission (singleMission) 
+    newMission.save() // The .save is what actually saves the song to the database
+    })
+  }
+  // Call a function while declaring it  - extra curriculum (do research)
+  resetDatabase()
+}
 
 // Start defining your routes here
 app.get("/", (req, res) => {
