@@ -30,8 +30,6 @@ const UserSchema = new Schema({
     type: [ScoreSchema],
     default: []
   }
-  // Possibly connecting missions to the user later
-  // missions: {}
 });
 
 export default UserSchema

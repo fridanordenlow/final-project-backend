@@ -5,7 +5,6 @@ const User = mongoose.model("User", UserSchema)
 
 const authenticateUser = async (req, res, next) => {
     const accessToken = req.header("Authorization")
-    // If we find the user's correct accessToken in the header "Authorization"
     try {
       const user = await User.findOne({accessToken: accessToken})
       if (user) {

@@ -26,16 +26,16 @@ app.use(express.json());
 const User = mongoose.model("User", UserSchema)
 const Mission = mongoose.model("Mission", MissionSchema)
 
+// Populate database with missions
 // RESET_DB is an environmental variable, write "RESET_DB=true npm run dev" in terminal to reset database
 if (process.env.RESET_DB) {
   const resetDatabase = async () => {
     await Mission.deleteMany()
     missionsData.forEach((singleMission) => {
     const newMission = new Mission (singleMission) 
-    newMission.save() // The .save is what actually saves the song to the database
+    newMission.save()
     })
   }
-  // Call a function while declaring it  - extra curriculum (do research)
   resetDatabase()
 }
 
@@ -109,7 +109,8 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// MISSIONS
+
+//// MISSIONS
 // GET missions
 app.get("/missions", authenticateUser)
 app.get("/missions", async (req, res) => {
@@ -117,8 +118,6 @@ app.get("/missions", async (req, res) => {
 
   try {
     const user = await User.findOne({ accessToken }) 
-   // const user = await User.findOne({ accessToken: accessToken })
-
 
     if (!user) {
       return res.status(403).json({
@@ -127,7 +126,7 @@ app.get("/missions", async (req, res) => {
       })
     }
 
-    const missions = await Mission.find() // .populate('user') https://mongoosejs.com/docs/populate.html
+    const missions = await Mission.find()
 
     res.status(200).json({
       success: true,
@@ -142,7 +141,6 @@ app.get("/missions", async (req, res) => {
     })
   }
 });
-
 
 // POST missions 
 app.post("/missions", authenticateUser)
@@ -207,8 +205,7 @@ app.get("/missions/:missionId", async (req, res) => {
   }
 })
 
-// PATCH single user's score from specific mission
-// Can remove userId and only use accessToken
+// PATCH to a single user's score from specific mission
 app.patch("/missions/collect-points/:missionId", authenticateUser);
 app.patch("/missions/collect-points/:missionId", async (req, res) => {
   const { missionId } = req.params;
@@ -240,7 +237,6 @@ app.patch("/missions/collect-points/:missionId", async (req, res) => {
     }
 
     user.dailyScores.push(collectedMissionPoints)
-    // console.log(collectedMissionPoints)
 
     await user.save();
 
@@ -260,7 +256,7 @@ app.patch("/missions/collect-points/:missionId", async (req, res) => {
 });
 
 
-// USERS
+//// USERS
 // GET single user by id
 app.get("/users/:userId", authenticateUser)
 app.get("/users/:userId", async (req, res) => {
@@ -270,7 +266,6 @@ app.get("/users/:userId", async (req, res) => {
   try {
 
     const user = await User.findOne({_id: userId, accessToken})
-    // const user = await User.findById(userId)
 
     if (!user) {
       return res.status(403).json({
@@ -292,7 +287,7 @@ app.get("/users/:userId", async (req, res) => {
   }
 })
 
-// GET a user's total score
+// GET a single user's total score
 app.get("/users/:userId/total-score", authenticateUser)
 app.get("/users/:userId/total-score", async (req, res) => {
   const { userId } = req.params
@@ -300,8 +295,6 @@ app.get("/users/:userId/total-score", async (req, res) => {
 
   try {
     const user = await User.findOne({_id:userId, accessToken})
-    // const user = await User.findById({ accessToken })
-
 
     if (!user) {
       return res.status(404).json({
@@ -312,7 +305,6 @@ app.get("/users/:userId/total-score", async (req, res) => {
     }
 
     const totalScore = user.dailyScores.reduce((sum, score) => sum + score.points, 0)
-    // console.log(totalScore)
 
     res.status(200).json({
       success: true,

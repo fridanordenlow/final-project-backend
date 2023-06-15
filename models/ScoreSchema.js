@@ -5,7 +5,7 @@ const { Schema } = mongoose
 const ScoreSchema = new Schema({
     missionTitle: {
         type: String,
-        required: false // If we set this to true it does not work and I can't figure out why (neither can chatGPT)
+        required: false // If we set this to true it does not work and I don't know why
     },
     points: {
         type: Number,

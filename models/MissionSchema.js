@@ -18,16 +18,6 @@ const MissionSchema = new Schema({
       type: Number,
       required: true,
     }
-    // createdAt: {
-    //   type: Date,
-    //   default: new Date(),
-    //   required: true
-    // },
-    // Not necessary yet? Stretch goal for users to post their own missions
-    // user: {
-    //   type: String,
-    //   required: true
-    // }
   });
 
   export default MissionSchema
